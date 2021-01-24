@@ -1,3 +1,3 @@
-export const saveFile = (_data: string, _filename: string) => {
+export const saveFile = (_data: Blob | string, _filename: string) => {
     // todo
 };
