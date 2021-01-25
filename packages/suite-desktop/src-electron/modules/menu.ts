@@ -10,7 +10,7 @@ const init = ({ mainWindow }: Dependencies) => {
     mainWindow.setMenuBarVisibility(false);
 
     mainWindow.webContents.on('context-menu', (_, props) => {
-        const isTextSelected = props.selectionText && props.selectionText.trim() !== '';
+        const isTextSelected = Boolean(props.selectionText) && props.selectionText.trim() !== '';
         logger.debug('menu', [
             'Context menu:',
             `- Editable: ${b2t(props.isEditable)}`,

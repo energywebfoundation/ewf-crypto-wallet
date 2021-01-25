@@ -26,7 +26,7 @@ export const defaultOptions: Options = {
 
 class Logger implements ILogger {
     static instance: Logger;
-    private stream: fs.WriteStream;
+    private stream: fs.WriteStream | undefined;
     private options: Options;
     private logLevel = 0;
 
@@ -38,6 +38,14 @@ class Logger implements ILogger {
         };
 
         if (this.logLevel > 0 && this.options.writeToDisk) {
+            if (!this.options.outputPath || !this.options.outputFile) {
+                this.error(
+                    'logger',
+                    "Can't write log to file because outputFile or outputPath are invalid",
+                );
+                return;
+            }
+
             this.stream = fs.createWriteStream(
                 path.join(this.options.outputPath, this.format(this.options.outputFile)),
             );
@@ -60,7 +68,7 @@ class Logger implements ILogger {
         messages.forEach(m =>
             this.write(
                 level,
-                this.format(logFormat, {
+                this.format(logFormat ?? '', {
                     lvl: level.toUpperCase(),
                     top: topic,
                     msg: m,
@@ -74,7 +82,7 @@ class Logger implements ILogger {
             console.log(this.options.colors ? this.color(level, message) : message);
         }
 
-        if (this.options.writeToDisk) {
+        if (this.stream !== undefined) {
             this.stream.write(`${message}\n`);
         }
     }
@@ -109,7 +117,7 @@ class Logger implements ILogger {
     }
 
     public exit() {
-        if (this.options.writeToDisk) {
+        if (this.stream !== undefined) {
             this.stream.end();
         }
     }

@@ -22,13 +22,13 @@
         "skipLibCheck": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noImplicitAny": true,
-        "baseUrl": "."
+        "noImplicitAny": true
     },
     "include": [
         "**/*.ts"
     ],
     "exclude": [
         "**/*.js",
+        "**/*.test.ts",
     ]
 }

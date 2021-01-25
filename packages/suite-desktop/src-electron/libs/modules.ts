@@ -16,21 +16,9 @@ const modules = async (dependencies: Dependencies) => {
                 return [];
             }
 
-            const deps: { [name in keyof Dependencies]: any } = {};
-            module.dependencies.forEach((dep: keyof Dependencies) => {
-                if (dependencies[dep] === undefined) {
-                    logger.error(
-                        'modules',
-                        `Dependency ${dep} is missing for module ${module.name}`,
-                    );
-                    return;
-                }
-                deps[dep] = dependencies[dep];
-            });
-
             try {
                 const m = await import(`./modules/${module.name}`);
-                return [m.default(deps)];
+                return [m.default(dependencies)];
             } catch (err) {
                 logger.error('modules', `Couldn't load ${module.name} (${err.toString()})`);
             }
